@@ -1,0 +1,11 @@
+{{form.csrf_token}}
+<h1>ID : {{book.id}}</h1>  
+<!-- book id value passed in the anchor tags, check index html anchor tags -->
+<h2>{{book.id}} - {{book.title}} - {{book.author}}</h2>
+<h2>Previous Rating : {{book.rating}}</h2>
+<form action="", method="POST">
+    <p>{{form.rating.label}}</p>
+    {{form.hidden_id(value=book.id)}}
+    {{form.rating}}
+    {{form.submit}}
+</form>

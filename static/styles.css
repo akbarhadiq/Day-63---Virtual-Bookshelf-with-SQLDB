@@ -10,3 +10,8 @@
     text-align: center;
     padding-top: 10px;
 }
+
+.bookshelf {
+    margin-left: auto;
+    margin-right: auto;
+}

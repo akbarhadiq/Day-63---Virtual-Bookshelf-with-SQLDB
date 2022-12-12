@@ -1,8 +1,8 @@
-from flask import Flask, render_template, url_for, redirect, flash
+from flask import Flask, render_template, url_for, redirect, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from load_dotenv import load_dotenv
 import os
-from forms import BookForm
+from forms import BookForm, EditRating
 
 load_dotenv('secret.env')
 
@@ -16,7 +16,8 @@ db = SQLAlchemy(app)
 
 # Book database model
 class Book(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(250), unique=True, nullable=False)
     author = db.Column(db.String(250), unique=False, nullable=False)
     rating = db.Column(db.Float, nullable=False)
@@ -29,13 +30,14 @@ class Book(db.Model):
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template("index.html", title="Home")
+    return render_template("index.html", title="Home", book_data = Book.query.all())
 
 
 @app.route("/add", methods=["POST", "GET"])
 def add():
     form = BookForm()
-    if form.validate_on_submit:
+
+    if request.method == "POST":
         book_title = form.title.data
         book_author = form.author.data
         book_rating = form.rating.data
@@ -52,6 +54,22 @@ def add():
 
     return render_template("add.html", form=form)
 
+@app.route("/edit", methods=["GET", "POST"])
+def edit():
+    form = EditRating()
+
+    if request.method == "POST":
+        # Update book record
+        book_id = form.hidden_id.data  # ---> hidden value of id data in edit_rating.html
+        book_to_update = Book.query.get(book_id)
+        book_to_update.rating = form.rating.data
+        db.session.commit()
+        return redirect(url_for('home'))
+
+    
+    book_id = request.args.get("id")
+    book = Book.query.get(book_id)
+    return render_template("edit_rating.html" , book=book, form=form)
 
 if __name__ == "__main__":
     app.run(debug=True)
