@@ -16,7 +16,7 @@ db = SQLAlchemy(app)
 
 # Book database model
 class Book(db.Model):
-    
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(250), unique=True, nullable=False)
     author = db.Column(db.String(250), unique=False, nullable=False)
@@ -71,6 +71,14 @@ def edit():
     book = Book.query.get(book_id)
     return render_template("edit_rating.html" , book=book, form=form)
 
+
+@app.route("/delete", methods = ["POST", "GET"])
+def delete():
+    book_id = request.args.get("id")
+    book = Book.query.get(book_id)
+    db.session.delete(book)
+    return redirect(url_for('home'))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
-    # db.create_all()
