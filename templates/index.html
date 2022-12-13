@@ -30,7 +30,7 @@
                 <tbody>
                     {%for book in book_data%}
                     <tr>
-                        <td>{{book.title}} <a href="{{url_for('delete'), id=book.id}}">Delete</a></td>
+                        <td>{{book.title}} <a href="{{url_for('delete', id=book.id)}}">Delete</a></td>
                         <td>{{book.author}}</td>
                         <td>{{book.rating}} <a href="{{url_for('edit', id=book.id)}}">Edit Rating</a></td>
                     </tr>

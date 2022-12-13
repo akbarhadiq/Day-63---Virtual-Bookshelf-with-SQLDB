@@ -77,8 +77,9 @@ def delete():
     book_id = request.args.get("id")
     book = Book.query.get(book_id)
     db.session.delete(book)
+    db.session.commit()
     return redirect(url_for('home'))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
